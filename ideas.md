@@ -26,7 +26,7 @@ Puzzles
         - a hidden passage in the room opens
     - player can go to the next room
 
-    
+
 - room 2
     - next room is a hallway with five doors
     - there is a key on the floor when you enter
@@ -56,3 +56,6 @@ Objects
     - items in their inventory
     - which room they are in
     - move method to change rooms
+
+- Map
+    - 2D array of rooms
