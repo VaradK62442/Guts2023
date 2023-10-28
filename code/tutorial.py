@@ -11,7 +11,7 @@ items = [key, note]
 inventory = []
 
 # 0 is open, 1 is closed (initially)
-door_locations = {(0, 5): ['tutorial2.pkl', 1]}
+door_locations = {(0, 5): ['level1.pkl', 1]}
 
 xDim = 15
 yDim = 10

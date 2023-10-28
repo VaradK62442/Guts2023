@@ -70,8 +70,20 @@ class Game(tk.Tk):
         #     canvas = tk.Canvas(popup, width=100, height=100, bg="white")
         #     canvas.pack()
         #     self.draw_key(canvas)
+
+        if item.name == "TV Remote":
+            popup = tk.Toplevel(self)
+            popup.title(item.name)
+
+            label = tk.Label(popup, text=item.description, wraplength=300, font=("Chiller", 20))
+            label.pack(pady=20, padx=20)
+
+            entry = tk.Entry(popup, text="", wraplength=300, font=("Chiller", 20))
+            entry.pack()
+
+            tk.Button(popup, text= "Enter", width= 20, command=tvRemoteAnswer).pack(pady=20)
             
-        if item.name == "Note":
+        elif item.name not in ["Key"]:
             popup = tk.Toplevel(self)
             popup.title(item.name)
 
@@ -143,7 +155,7 @@ class Game(tk.Tk):
                 new_pos[0] += 1
 
             # Check if the new position contains an item or other impassable object
-            if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', 'N', '✠', '|', '-'] or tuple(new_pos) in self.door_locations:
+            if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', '|', '-'] + [item.representation for item in self.items] or tuple(new_pos) in self.door_locations:
                 if tuple(new_pos) in self.door_locations:
                     if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
                         message = "The door is locked. You need a key to unlock it."
@@ -159,8 +171,6 @@ class Game(tk.Tk):
                     self.player_pos = new_pos
                     self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
                     self.moves += 1
-
-        self.key.representation = "✠" # if self.moves % 2 == 0 else "✠"
 
         if event.keysym == 'e':
             for item in self.items:
@@ -206,9 +216,12 @@ def load_state(filename, inv=[]):
     me = Game(me[2], me[3], me[4], inv, me[6], me[7], filename)
     me.mainloop()
 
+def tvRemoteAnswer():
+    pass
+
 if __name__ == "__main__":
     # pickle everything
-    level_names = ['tutorial', 'tutorial2']
+    level_names = ['tutorial', 'level1', 'level2']
     for level in level_names:
         os.system(f'python3 {level}.py')
 
