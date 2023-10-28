@@ -53,15 +53,16 @@ class Game(tk.Tk):
         self.update_map()
     
     def create_popup(self, item):
-        popup = tk.Toplevel(self)
-        popup.title(item.name)
         
-        if item.name == "Key":
-            canvas = tk.Canvas(popup, width=100, height=100, bg="white")
-            canvas.pack()
-            self.draw_key(canvas)
+        # if item.name == "Key":
+        #     canvas = tk.Canvas(popup, width=100, height=100, bg="white")
+        #     canvas.pack()
+        #     self.draw_key(canvas)
             
-        elif item.name == "Note":
+        if item.name == "Note":
+            popup = tk.Toplevel(self)
+            popup.title(item.name)
+
             label = tk.Label(popup, text=item.description, wraplength=300, font=("Chiller", 20))
             label.pack(pady=20, padx=20)
 
@@ -129,7 +130,6 @@ class Game(tk.Tk):
 
             # Check if the new position contains an item or other impassable object
             if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', 'N', '✠', '|', '-'] or new_pos == [0, 5]:
-                print(new_pos)
                 if new_pos == [0, 5] and self.key not in self.inventory:
                     message = "The door is locked. You need a key to unlock it."
                 else:
