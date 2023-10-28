@@ -18,6 +18,8 @@ class Game(tk.Tk):
         pygame.mixer.init()
 
         self.filename = filename
+
+        self.tvAnswerCorrect = False
         
         # Ensure the path to the Music.mp3 file is correct
         pygame.mixer.music.load("./files/Music.mp3")
@@ -63,13 +65,14 @@ class Game(tk.Tk):
         self.bind("<Key>", self.key_press)
 
         self.update_map()
+
+    def tvRemoteAnswer(self):
+        print("remote answer called")
+        print(self.entry.get())
+        if self.entry.get() == "1667":
+            self.tvAnswerCorrect = True
     
     def create_popup(self, item):
-        
-        # if item.name == "Key":
-        #     canvas = tk.Canvas(popup, width=100, height=100, bg="white")
-        #     canvas.pack()
-        #     self.draw_key(canvas)
 
         if item.name == "TV Remote":
             popup = tk.Toplevel(self)
@@ -78,10 +81,10 @@ class Game(tk.Tk):
             label = tk.Label(popup, text=item.description, wraplength=300, font=("Chiller", 20))
             label.pack(pady=20, padx=20)
 
-            entry = tk.Entry(popup, text="", wraplength=300, font=("Chiller", 20))
-            entry.pack()
+            self.entry = tk.Entry(popup, text="", font=("Chiller", 20))
+            self.entry.pack(pady=20, padx=20)
 
-            tk.Button(popup, text= "Enter", width= 20, command=tvRemoteAnswer).pack(pady=20)
+            tk.Button(popup, text= "Enter", width= 20, command=self.tvRemoteAnswer).pack(pady=20)
             
         elif item.name not in ["Key"]:
             popup = tk.Toplevel(self)
@@ -89,36 +92,6 @@ class Game(tk.Tk):
 
             label = tk.Label(popup, text=item.description, wraplength=300, font=("Chiller", 20))
             label.pack(pady=20, padx=20)
-
-    # def draw_key(self, canvas):
-    #     colors = ["yellow", "brown"]
-    #     key_pixels = [
-    #         " 0011 ",
-    #         " 0011 ",
-    #         "111111",
-    #         "  11  ",
-    #         "  11  ",
-    #     ]
-    #     self.draw_pixels(canvas, key_pixels, colors)
-
-    # def draw_book(self, canvas):
-    #     colors = ["blue", "white"]
-    #     book_pixels = [
-    #         "11111",
-    #         "10001",
-    #         "10001",
-    #         "10001",
-    #         "11111",
-    #     ]
-    #     self.draw_pixels(canvas, book_pixels, colors)
-
-    # def draw_pixels(self, canvas, pixels, colors):
-    #     for y, row in enumerate(pixels):
-    #         for x, char in enumerate(row):
-    #             if char != " ":
-    #                 color = colors[int(char)]
-    #                 canvas.create_rectangle(x * 10, y * 10, (x + 1) * 10, (y + 1) * 10, fill=color, outline=color)
-
 
     def update_inventory_label(self):
         inventory_text = "Inventory: " + ", ".join([item.name for item in self.inventory])
@@ -154,18 +127,25 @@ class Game(tk.Tk):
             elif event.keysym == 'd' and new_pos[0] < self.map.dimen[0] - 1:
                 new_pos[0] += 1
 
+            if self.tvAnswerCorrect:
+                key = Item("Key", "A mysterious key...", "✠", [7, 7])
+                self.inventory.append(key)
+                self.key = key
+                self.tvAnswerCorrect = False
+
             # Check if the new position contains an item or other impassable object
             if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', '|', '-'] + [item.representation for item in self.items] or tuple(new_pos) in self.door_locations:
                 if tuple(new_pos) in self.door_locations:
+                    print(self.door_locations[tuple(new_pos)])
                     if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
                         message = "The door is locked. You need a key to unlock it."
-                    else:
+                    elif self.key in self.inventory:
                         self.door_locations[tuple(new_pos)][1] = 0
-                        self.inventory.remove(self.key) # remove key if used on door
-                        self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                        self.player_pos = new_pos
-                        self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                        self.moves += 1
+                        self.inventory.remove(self.key) # remove key if used on door         
+                    self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                    self.player_pos = new_pos
+                    self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                    self.moves += 1
                 else:
                     self.map.add_to_map(".", self.player_pos)  # Clear current player position
                     self.player_pos = new_pos
@@ -181,6 +161,7 @@ class Game(tk.Tk):
                         self.update_inventory_label()
                         self.create_popup(item)
                         # Remove item representation from the map after it's collected
+                        print(item.position)
                         self.map.add_to_map(".", item.position)
                         break
 
@@ -215,9 +196,6 @@ def load_state(filename, inv=[]):
     me = pickle.load(open("./levels/" + filename, "rb"))
     me = Game(me[2], me[3], me[4], inv, me[6], me[7], filename)
     me.mainloop()
-
-def tvRemoteAnswer():
-    pass
 
 if __name__ == "__main__":
     # pickle everything
