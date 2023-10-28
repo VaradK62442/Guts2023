@@ -1,6 +1,7 @@
 import tkinter as tk
 import pygame
 import random
+import pickle
 
 from item import Item
 from map import Map
@@ -169,6 +170,15 @@ class Game(tk.Tk):
 
         if message:
             self.display_message(message)
+
+    def save_state(game,filename):
+        game_info = ["these", "nuts", game.map,game.slender_pos, game.player_pos, game.items, game.key]#[title, geom, map, etc..]
+        print(game_info)
+        pickle.dump(game_info, open(filename, "wb"))
+
+    def load_state(File):
+        me = pickle.load(open(File, "rb"))
+        return me
 
 
 if __name__ == "__main__":
