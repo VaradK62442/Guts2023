@@ -73,8 +73,22 @@ class Game(tk.Tk):
         self.controls_label.pack(side="top")
         
         self.bind("<Key>", self.key_press)
-
+        self.bind("<i>", self.show_inventory)  # bind the "i" key to show inventory
+        
         self.update_map()
+
+    def show_inventory(self, event=None):
+        if not self.winfo_exists():  # Check if the window exists
+            return
+
+        popup = tk.Toplevel(self)
+        popup.title("Inventory")
+
+        for item in self.inventory:
+            label = tk.Label(popup, text=f"{item.name}: {item.description}", wraplength=300, font=("Arial", 10))
+            label.pack(pady=5, padx=5)
+        
+        tk.Button(popup, text="Close", command=popup.destroy).pack(pady=5)
 
     def tvRemoteAnswer(self):
         print(self.entry.get())
