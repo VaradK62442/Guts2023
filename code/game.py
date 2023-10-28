@@ -172,7 +172,8 @@ class Game(tk.Tk):
             self.display_message(message)
 
     def save_state(game,filename):
-        game_info = ["these", "nuts", game.map,game.slender_pos, game.player_pos, game.items, game.key]#[title, geom, map, etc..]
+        # [title, geom, map, etc.]
+        game_info = ["these", "nuts", game.map, game.player_pos, game.items, game.key]
         print(game_info)
         pickle.dump(game_info, open(filename, "wb"))
 
