@@ -171,11 +171,11 @@ class Game(tk.Tk):
         if message:
             self.display_message(message)
 
-    def save_state(game,filename):
+    def save_state(game, filename):
         # [title, geom, map, etc.]
         game_info = ["these", "nuts", game.map, game.player_pos, game.items, game.key]
         print(game_info)
-        pickle.dump(game_info, open(filename, "wb"))
+        pickle.dump(game_info, open('./levels/' + filename, "wb"))
 
     def load_state(File):
         me = pickle.load(open(File, "rb"))
