@@ -7,6 +7,9 @@ class Map:
         self.user_map(door_locations)
 
     def user_map(self, door_locations):
+
+        print("doors: ", door_locations)
+
         self.arr = []
         for y in range(self.dimen[1]):
             self.arr.append([None] * self.dimen[0])
@@ -20,7 +23,7 @@ class Map:
 
         # add doors
         for door in door_locations:
-            self.add_to_map("D", door) 
+            self.add_to_map("D", door) if door_locations[door][1] else self.add_to_map(".", door)
 
     def show_map(self, canvas):
         canvas.delete("all")
@@ -38,7 +41,10 @@ class Map:
         elif object == "S":
             self.arr[position[1]][position[0]] = "S"
         else:
-            self.arr[position[1]][position[0]] = object
+            try:
+                self.arr[position[1]][position[0]] = object
+            except Exception as e:
+                pass
 
     def reset(self, items, inventory, player_pos):
         self.user_map()

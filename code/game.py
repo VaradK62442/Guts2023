@@ -7,13 +7,15 @@ from item import Item
 from map import Map
 
 class Game(tk.Tk):
-    def __init__(self, map, player_pos, items, key, door_locations):
+    def __init__(self, map, player_pos, items, key, door_locations, filename):
         super().__init__()
         self.title("Halloween Escape Room")
         self.geometry("420x420")
         self.configure(bg="black")
 
         pygame.mixer.init()
+
+        self.filename = filename
         
         # Ensure the path to the Music.mp3 file is correct
         pygame.mixer.music.load("./files/Music.mp3")
@@ -137,9 +139,16 @@ class Game(tk.Tk):
                 new_pos[0] += 1
 
             # Check if the new position contains an item or other impassable object
-            if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', 'N', '✠', '|', '-'] or new_pos in self.door_locations:
-                if new_pos == [0, 5] and self.key not in self.inventory:
-                    message = "The door is locked. You need a key to unlock it."
+            if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', 'N', '✠', '|', '-'] or tuple(new_pos) in self.door_locations:
+                if tuple(new_pos) in self.door_locations:
+                    if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
+                        message = "The door is locked. You need a key to unlock it."
+                    else:
+                        self.door_locations[tuple(new_pos)][1] = 0
+                        self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                        self.player_pos = new_pos
+                        self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                        self.moves += 1
                 else:
                     self.map.add_to_map(".", self.player_pos)  # Clear current player position
                     self.player_pos = new_pos
@@ -160,11 +169,14 @@ class Game(tk.Tk):
                         self.map.add_to_map(".", item.position)
                         break
 
-            if self.player_pos == [0, 5] and self.key in self.inventory:
-                pygame.mixer.music.stop()
-                self.display_win_message()
-                self.unbind("<Key>")
-                return
+            # if player opens door and leaves
+            if tuple(self.player_pos) in self.door_locations: #  and self.key in self.inventory:
+                self.save_state(self.filename)
+                pp = tuple(self.player_pos)
+                dl = self.door_locations
+                self.destroy()
+
+                load_state(dl[pp][0])
         
         elif event.keysym == 'q':
             self.destroy()
@@ -180,17 +192,17 @@ class Game(tk.Tk):
 
     def save_state(game, filename):
         # [title, geom, map, etc.]
-        game_info = ["these", "nuts", game.map, game.player_pos, game.items, game.key, game.door_locations]
+        game_info = ["title", "geom", game.map, game.player_pos, game.items, game.key, game.door_locations]
         print(game_info)
         pickle.dump(game_info, open('./levels/' + filename, "wb"))
 
 
 def load_state(filename):
+    print(filename)
     me = pickle.load(open("./levels/" + filename, "rb"))
-    return me
+    print(me)
+    me = Game(me[2], me[3], me[4], me[5], me[6], filename[0])
+    me.mainloop()
 
 if __name__ == "__main__":
-    tutorialList = load_state("tutorial.pkl")
-    print(tutorialList)
-    tutorial = Game(tutorialList[2], tutorialList[3], tutorialList[4], tutorialList[5], tutorialList[6])
-    tutorial.mainloop()
+    load_state("tutorial.pkl")
