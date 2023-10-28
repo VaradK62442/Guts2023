@@ -71,20 +71,21 @@ class Game(tk.Tk):
         print(self.entry.get())
         if self.entry.get() == "1667":
             self.tvAnswerCorrect = True
+            self.popup.destroy()
     
     def create_popup(self, item):
 
         if item.name == "TV Remote":
-            popup = tk.Toplevel(self)
-            popup.title(item.name)
+            self.popup = tk.Toplevel(self)
+            self.popup.title(item.name)
 
-            label = tk.Label(popup, text=item.description, wraplength=300, font=("Chiller", 20))
+            label = tk.Label(self.popup, text=item.description, wraplength=300, font=("Chiller", 20))
             label.pack(pady=20, padx=20)
 
-            self.entry = tk.Entry(popup, text="", font=("Chiller", 20))
+            self.entry = tk.Entry(self.popup, text="", font=("Chiller", 20))
             self.entry.pack(pady=20, padx=20)
 
-            tk.Button(popup, text= "Enter", width= 20, command=self.tvRemoteAnswer).pack(pady=20)
+            tk.Button(self.popup, text= "Enter", width= 20, command=self.tvRemoteAnswer).pack(pady=20)
             
         elif item.name not in ["Key"]:
             popup = tk.Toplevel(self)
