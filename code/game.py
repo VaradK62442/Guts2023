@@ -7,7 +7,7 @@ from item import Item
 from map import Map
 
 class Game(tk.Tk):
-    def __init__(self):
+    def __init__(self, map, player_pos, items, key, door_locations):
         super().__init__()
         self.title("Halloween Escape Room")
         self.geometry("420x420")
@@ -16,23 +16,30 @@ class Game(tk.Tk):
         pygame.mixer.init()
         
         # Ensure the path to the Music.mp3 file is correct
-        pygame.mixer.music.load("./code/files/Music.mp3")
+        pygame.mixer.music.load("./files/Music.mp3")
         pygame.mixer.music.play(-1)
 
-        self.map = Map([10, 10])
+        self.map = map
 
-        self.player_pos = [5, 5]
+        self.player_pos = player_pos
         self.map.add_to_map("⯌", self.player_pos)
         self.moves = 0
 
-        self.key = Item("Key", "A mysterious key...", "✠", [7, 7])
-        self.map.add_to_map(self.key, self.key.position)
+        # self.key = Item("Key", "A mysterious key...", "✠", [7, 7])
+        # self.map.add_to_map(self.key, self.key.position)
 
-        self.note = Item("Note", "A mysterious note that reads\n 'Welcome adventurer, we shall soon find out if you have the guts to make it through...'", "N", [2, 2])
-        self.map.add_to_map(self.note, self.note.position)
+        # self.note = Item("Note", "A mysterious note that reads\n 'Welcome adventurer, we shall soon find out if you have the guts to make it through...'", "N", [2, 2])
+        # self.map.add_to_map(self.note, self.note.position)
 
-        self.items = [self.key, self.note]
+        self.items = items
         self.inventory = []
+
+        # add everything to map
+        for item in items:
+            self.map.add_to_map(item, item.position)
+
+        self.key = key
+        self.door_locations = door_locations
 
         self.canvas = tk.Canvas(self, width=400, height=300, bg="black")
         self.canvas.pack()
@@ -67,34 +74,34 @@ class Game(tk.Tk):
             label = tk.Label(popup, text=item.description, wraplength=300, font=("Chiller", 20))
             label.pack(pady=20, padx=20)
 
-    def draw_key(self, canvas):
-        colors = ["yellow", "brown"]
-        key_pixels = [
-            " 0011 ",
-            " 0011 ",
-            "111111",
-            "  11  ",
-            "  11  ",
-        ]
-        self.draw_pixels(canvas, key_pixels, colors)
+    # def draw_key(self, canvas):
+    #     colors = ["yellow", "brown"]
+    #     key_pixels = [
+    #         " 0011 ",
+    #         " 0011 ",
+    #         "111111",
+    #         "  11  ",
+    #         "  11  ",
+    #     ]
+    #     self.draw_pixels(canvas, key_pixels, colors)
 
-    def draw_book(self, canvas):
-        colors = ["blue", "white"]
-        book_pixels = [
-            "11111",
-            "10001",
-            "10001",
-            "10001",
-            "11111",
-        ]
-        self.draw_pixels(canvas, book_pixels, colors)
+    # def draw_book(self, canvas):
+    #     colors = ["blue", "white"]
+    #     book_pixels = [
+    #         "11111",
+    #         "10001",
+    #         "10001",
+    #         "10001",
+    #         "11111",
+    #     ]
+    #     self.draw_pixels(canvas, book_pixels, colors)
 
-    def draw_pixels(self, canvas, pixels, colors):
-        for y, row in enumerate(pixels):
-            for x, char in enumerate(row):
-                if char != " ":
-                    color = colors[int(char)]
-                    canvas.create_rectangle(x * 10, y * 10, (x + 1) * 10, (y + 1) * 10, fill=color, outline=color)
+    # def draw_pixels(self, canvas, pixels, colors):
+    #     for y, row in enumerate(pixels):
+    #         for x, char in enumerate(row):
+    #             if char != " ":
+    #                 color = colors[int(char)]
+    #                 canvas.create_rectangle(x * 10, y * 10, (x + 1) * 10, (y + 1) * 10, fill=color, outline=color)
 
 
     def update_inventory_label(self):
@@ -130,7 +137,7 @@ class Game(tk.Tk):
                 new_pos[0] += 1
 
             # Check if the new position contains an item or other impassable object
-            if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', 'N', '✠', '|', '-'] or new_pos == [0, 5]:
+            if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', 'N', '✠', '|', '-'] or new_pos in self.door_locations:
                 if new_pos == [0, 5] and self.key not in self.inventory:
                     message = "The door is locked. You need a key to unlock it."
                 else:
@@ -173,15 +180,17 @@ class Game(tk.Tk):
 
     def save_state(game, filename):
         # [title, geom, map, etc.]
-        game_info = ["these", "nuts", game.map, game.player_pos, game.items, game.key]
+        game_info = ["these", "nuts", game.map, game.player_pos, game.items, game.key, game.door_locations]
         print(game_info)
         pickle.dump(game_info, open('./levels/' + filename, "wb"))
 
-    def load_state(filename):
-        me = pickle.load(open("./levels/" + filename, "rb"))
-        return me
 
+def load_state(filename):
+    me = pickle.load(open("./levels/" + filename, "rb"))
+    return me
 
 if __name__ == "__main__":
-    game = Game()
-    game.mainloop()
+    tutorialList = load_state("tutorial.pkl")
+    print(tutorialList)
+    tutorial = Game(tutorialList[2], tutorialList[3], tutorialList[4], tutorialList[5], tutorialList[6])
+    tutorial.mainloop()

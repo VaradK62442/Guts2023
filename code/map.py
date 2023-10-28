@@ -2,11 +2,11 @@ from item import Item
 
 class Map:
 
-    def __init__(self, dimensions):
+    def __init__(self, dimensions, door_locations):
         self.dimen = dimensions  # [x, y]
-        self.user_map()
+        self.user_map(door_locations)
 
-    def user_map(self):
+    def user_map(self, door_locations):
         self.arr = []
         for y in range(self.dimen[1]):
             self.arr.append([None] * self.dimen[0])
@@ -18,7 +18,9 @@ class Map:
                 else:
                     self.arr[y][x] = "."
 
-        self.add_to_map("D", [0, 5])  # Add a door at position (0, 5)
+        # add doors
+        for door in door_locations:
+            self.add_to_map("D", door) 
 
     def show_map(self, canvas):
         canvas.delete("all")
