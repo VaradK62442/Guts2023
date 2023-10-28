@@ -170,13 +170,13 @@ class Game(tk.Tk):
                         break
 
             # if player opens door and leaves
-            if tuple(self.player_pos) in self.door_locations: #  and self.key in self.inventory:
+            if tuple(self.player_pos) in self.door_locations: # and self.key in self.inventory:
                 self.save_state(self.filename)
                 pp = tuple(self.player_pos)
                 dl = self.door_locations
                 inv = self.inventory
                 self.destroy()
-
+                
                 load_state(dl[pp][0], inv)
         
         elif event.keysym == 'q':
@@ -202,7 +202,7 @@ def load_state(filename, inv):
     print(filename)
     me = pickle.load(open("./levels/" + filename, "rb"))
     print(me)
-    me = Game(me[2], me[3], me[4], me[5], me[6], me[7], filename[0])
+    me = Game(me[2], me[3], me[4], me[5], me[6], me[7], filename)
     me.mainloop()
 
 if __name__ == "__main__":
