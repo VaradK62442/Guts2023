@@ -177,8 +177,8 @@ class Game(tk.Tk):
         print(game_info)
         pickle.dump(game_info, open('./levels/' + filename, "wb"))
 
-    def load_state(File):
-        me = pickle.load(open(File, "rb"))
+    def load_state(filename):
+        me = pickle.load(open("./levels/" + filename, "rb"))
         return me
 
 
