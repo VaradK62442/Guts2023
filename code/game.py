@@ -60,6 +60,7 @@ class Game(tk.Tk):
             canvas = tk.Canvas(popup, width=100, height=100, bg="white")
             canvas.pack()
             self.draw_key(canvas)
+            
         elif item.name == "Note":
             label = tk.Label(popup, text=item.description, wraplength=300, font=("Chiller", 20))
             label.pack(pady=20, padx=20)
@@ -127,17 +128,17 @@ class Game(tk.Tk):
                 new_pos[0] += 1
 
             # Check if the new position contains an item or other impassable object
-            if self.map.arr[new_pos[1]][new_pos[0]] in ['D', 'N', '✠','|','-'] :#and new_pos != [0, 5]:
-                pass  # Do not move onto the item
-            elif new_pos == [0, 5] and self.key not in self.inventory:
-                message = "The door is locked. You need a key to unlock it."
-            else:
-                self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                self.player_pos = new_pos
-                self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                self.moves += 1
+            if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', 'N', '✠', '|', '-'] or new_pos == [0, 5]:
+                print(new_pos)
+                if new_pos == [0, 5] and self.key not in self.inventory:
+                    message = "The door is locked. You need a key to unlock it."
+                else:
+                    self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                    self.player_pos = new_pos
+                    self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                    self.moves += 1
 
-        self.key.representation = "✠" if self.moves % 2 == 0 else "✠"
+        self.key.representation = "✠" # if self.moves % 2 == 0 else "✠"
 
         if event.keysym == 'e':
             for item in self.items:
@@ -150,6 +151,7 @@ class Game(tk.Tk):
                         # Remove item representation from the map after it's collected
                         self.map.add_to_map(".", item.position)
                         break
+
             if self.player_pos == [0, 5] and self.key in self.inventory:
                 pygame.mixer.music.stop()
                 self.display_win_message()
@@ -167,3 +169,8 @@ class Game(tk.Tk):
 
         if message:
             self.display_message(message)
+
+
+if __name__ == "__main__":
+    game = Game()
+    game.mainloop()
