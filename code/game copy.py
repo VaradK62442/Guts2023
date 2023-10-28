@@ -19,6 +19,8 @@ class Game(tk.Tk):
         pygame.mixer.music.play(-1)
 
         self.map = Map([10, 10])
+        self.slender_pos = [8, 8]
+        self.map.add_to_map("S", self.slender_pos)
 
         self.player_pos = [5, 5]
         self.map.add_to_map("⯌", self.player_pos)
@@ -51,6 +53,18 @@ class Game(tk.Tk):
         self.bind("<Key>", self.key_press)
 
         self.update_map()
+
+    def move_slenderman(self):
+        moves = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+        move = random.choice(moves)
+        new_pos = [self.slender_pos[0] + move[0], self.slender_pos[1] + move[1]]
+        if self.map.arr[new_pos[1]][new_pos[0]] in ['D', 'N', '✠','|','-'] :#and new_pos != [0, 5]:
+            pass  # Do not move onto the item
+        else:
+            self.map.add_to_map(".", self.slender_pos)  # Clear current player position
+            self.slender_pos = new_pos
+            self.map.add_to_map("S", self.slender_pos)  # Add player to new position
+            self.moves += 1
     
     def create_popup(self, item):
         popup = tk.Toplevel(self)
@@ -155,11 +169,28 @@ class Game(tk.Tk):
                 self.display_win_message()
                 self.unbind("<Key>")
                 return
+            
+        if self.player_pos == self.slender_pos:
+            pygame.mixer.music.stop()
+            self.display_message("You were caught by Slenderman! Game over.")
+            self.unbind("<Key>")
+            return
+        
+        self.move_slenderman()
+        if self.player_pos == self.slender_pos:
+            pygame.mixer.music.stop()
+            self.display_message("You were caught by Slenderman! Game over.")
+            self.unbind("<Key>")
+            return
         
         elif event.keysym == 'q':
             self.destroy()
 
-        self.message_label.config(fg="white")
+        if abs(self.slender_pos[0] - self.player_pos[0]) <= 2 and abs(self.slender_pos[1] - self.player_pos[1]) <= 2:
+            self.display_message("You feel a presence nearby...")
+            self.message_label.config(fg="red")
+        else:
+            self.message_label.config(fg="white")
 
         self.update_map()
 
