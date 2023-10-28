@@ -7,7 +7,7 @@ from item import Item
 from map import Map
 
 class Game(tk.Tk):
-    def __init__(self, map, player_pos, items, key, door_locations, filename):
+    def __init__(self, map, player_pos, items, inventory, key, door_locations, filename):
         super().__init__()
         self.title("Halloween Escape Room")
         self.geometry("420x420")
@@ -34,7 +34,7 @@ class Game(tk.Tk):
         # self.map.add_to_map(self.note, self.note.position)
 
         self.items = items
-        self.inventory = []
+        self.inventory = inventory
 
         # add everything to map
         for item in items:
@@ -174,9 +174,10 @@ class Game(tk.Tk):
                 self.save_state(self.filename)
                 pp = tuple(self.player_pos)
                 dl = self.door_locations
+                inv = self.inventory
                 self.destroy()
 
-                load_state(dl[pp][0])
+                load_state(dl[pp][0], inv)
         
         elif event.keysym == 'q':
             self.destroy()
@@ -192,17 +193,17 @@ class Game(tk.Tk):
 
     def save_state(game, filename):
         # [title, geom, map, etc.]
-        game_info = ["title", "geom", game.map, game.player_pos, game.items, game.key, game.door_locations]
+        game_info = ["title", "geom", game.map, game.player_pos, game.items, game.inventory, game.key, game.door_locations]
         print(game_info)
         pickle.dump(game_info, open('./levels/' + filename, "wb"))
 
 
-def load_state(filename):
+def load_state(filename, inv):
     print(filename)
     me = pickle.load(open("./levels/" + filename, "rb"))
     print(me)
-    me = Game(me[2], me[3], me[4], me[5], me[6], filename[0])
+    me = Game(me[2], me[3], me[4], me[5], me[6], me[7], filename[0])
     me.mainloop()
 
 if __name__ == "__main__":
-    load_state("tutorial.pkl")
+    load_state("tutorial.pkl", [])
