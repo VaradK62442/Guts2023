@@ -27,7 +27,7 @@ class Game(tk.Tk):
         self.key = Item("Key", "A mysterious key...", "✠", [7, 7])
         self.map.add_to_map(self.key, self.key.position)
 
-        self.note = Item("Note", "The note reads...", "N", [2, 2])
+        self.note = Item("Note", "A mysterious note that reads\n 'Welcome adventurer, we shall soon find out if you have the guts to make it through...'", "N", [2, 2])
         self.map.add_to_map(self.note, self.note.position)
 
         self.items = [self.key, self.note]
