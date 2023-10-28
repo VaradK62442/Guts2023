@@ -49,7 +49,6 @@ class Game(tk.Tk):
 
         self.controls_label = tk.Label(self, text="Controls: W, A, S, D to move; E to interact; Q to quit", bg="black", fg="white", font=("Arial", 10))
         self.controls_label.pack(side="top")
-
         
         self.bind("<Key>", self.key_press)
 
@@ -112,6 +111,7 @@ class Game(tk.Tk):
     def update_inventory_label(self):
         inventory_text = "Inventory: " + ", ".join([item.name for item in self.inventory])
         self.inventory_label.config(text=inventory_text)
+
     def display_message(self,mssg):
         self.message_label.config(text = mssg)
 
@@ -169,11 +169,13 @@ class Game(tk.Tk):
                 self.display_win_message()
                 self.unbind("<Key>")
                 return
+            
         if self.player_pos == self.slender_pos:
             pygame.mixer.music.stop()
             self.display_message("You were caught by Slenderman! Game over.")
             self.unbind("<Key>")
             return
+        
         self.move_slenderman()
         if self.player_pos == self.slender_pos:
             pygame.mixer.music.stop()
