@@ -15,7 +15,7 @@ class Game(tk.Tk):
         pygame.mixer.init()
         
         # Ensure the path to the Music.mp3 file is correct
-        pygame.mixer.music.load("C:\\Users\\User\\Desktop\\Jackathon\\Music.mp3")
+        pygame.mixer.music.load("./code/files/Music.mp3")
         pygame.mixer.music.play(-1)
 
         self.map = Map([10, 10])
