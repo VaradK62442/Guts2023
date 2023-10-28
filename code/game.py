@@ -72,6 +72,13 @@ class Game(tk.Tk):
         if self.entry.get() == "1667":
             self.tvAnswerCorrect = True
             self.popup.destroy()
+
+    def check_file(self, file_name):
+        files = os.listdir("./files/")
+        if file_name in files:
+            return True
+        else:
+            return False
     
     def create_popup(self, item):
 
@@ -137,16 +144,25 @@ class Game(tk.Tk):
             # Check if the new position contains an item or other impassable object
             if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', '|', '-'] + [item.representation for item in self.items] or tuple(new_pos) in self.door_locations:
                 if tuple(new_pos) in self.door_locations:
-                    print(self.door_locations[tuple(new_pos)])
-                    if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
-                        message = "The door is locked. You need a key to unlock it."
-                    elif self.key in self.inventory:
-                        self.door_locations[tuple(new_pos)][1] = 0
-                        self.inventory.remove(self.key) # remove key if used on door         
-                    self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                    self.player_pos = new_pos
-                    self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                    self.moves += 1
+                    if self.filename == "room3.py":
+                        if self.check_file("lock.txt") and self.door_locations[tuple(new_pos)][1] == 1:
+                            message = "The door is locked. You need to do something to the lock."
+                        else:
+                            self.door_locations[tuple(new_pos)][1] = 0
+                            self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                            self.player_pos = new_pos
+                            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                            self.moves += 1
+                    else:
+                        if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
+                            message = "The door is locked. You need a key to unlock it."
+                        elif self.key in self.inventory:
+                            self.door_locations[tuple(new_pos)][1] = 0
+                            self.inventory.remove(self.key) # remove key if used on door         
+                        self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                        self.player_pos = new_pos
+                        self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                        self.moves += 1
                 else:
                     self.map.add_to_map(".", self.player_pos)  # Clear current player position
                     self.player_pos = new_pos
