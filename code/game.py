@@ -297,7 +297,7 @@ def load_state(filename, inv=[]):
 
 if __name__ == "__main__":
     # pickle everything
-    level_names = ['tutorial', 'level1', 'level2', 'level3', 'room3']
+    level_names = ['tutorial', 'level1', 'level2', 'level3', 'room3', 'win']
     for level in level_names:
         os.system(f'python3 {level}.py')
 

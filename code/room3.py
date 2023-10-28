@@ -2,7 +2,7 @@ from map import Map
 from item import Item
 from game import Game
 
-player_pos = [5, 5]
+player_pos = [9, 1]
 moves = 0
 
 key = Item("Key", "A mysterious key...", " ", [3, 4])
@@ -12,10 +12,10 @@ items = [key, note, note2]
 inventory = []
 
 # 0 is open, 1 is closed (initially)
-door_locations = {(2, 0): ['', 1], (9, 5): ['level2.pkl', 0]}
+door_locations = {(3, 19): ['win.pkl', 1], (9, 0): ['level2.pkl', 0]}
 
 xDim = 20
-yDim = 15
+yDim = 20
 map = Map([xDim, yDim], door_locations)
 with open('./files/lock.txt', 'w') as f:
     f.write('THIS IS THE LOCK')
