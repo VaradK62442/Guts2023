@@ -149,7 +149,7 @@ class Game(tk.Tk):
                         message = "The door is locked. You need a key to unlock it."
                     else:
                         self.door_locations[tuple(new_pos)][1] = 0
-                        self.items.remove(self.key) # remove key if used on door
+                        self.inventory.remove(self.key) # remove key if used on door
                         self.map.add_to_map(".", self.player_pos)  # Clear current player position
                         self.player_pos = new_pos
                         self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
