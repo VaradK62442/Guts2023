@@ -8,7 +8,7 @@ class Map:
 
     def user_map(self, door_locations):
 
-        print("doors: ", door_locations)
+        # print("doors: ", door_locations)
 
         self.arr = []
         for y in range(self.dimen[1]):

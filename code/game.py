@@ -3,6 +3,8 @@ import pygame
 import random
 import pickle
 
+import os
+
 from item import Item
 from map import Map
 
@@ -195,24 +197,19 @@ class Game(tk.Tk):
             self.display_message(message)
 
     def save_state(game, filename):
-        # [title, geom, map, etc.]
         game_info = ["title", "geom", game.map, game.player_pos, game.items, game.inventory, game.key, game.door_locations]
-        print(game_info)
         pickle.dump(game_info, open('./levels/' + filename, "wb"))
 
 
 def load_state(filename, inv=[]):
-    print(filename)
     me = pickle.load(open("./levels/" + filename, "rb"))
-    print(me)
-    print("inv: ", inv)
     me = Game(me[2], me[3], me[4], inv, me[6], me[7], filename)
     me.mainloop()
 
 if __name__ == "__main__":
     # pickle everything
-    level_names = ['tutorial.py', 'tutorial2.py']
+    level_names = ['tutorial', 'tutorial2']
     for level in level_names:
-        exec(open(level).read())
+        os.system(f'python3 {level}.py')
 
-    load_state(level_names[0].split('.')[0] + '.pkl', [])
+    load_state(level_names[0] + '.pkl', [])
