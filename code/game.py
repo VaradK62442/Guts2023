@@ -1,9 +1,9 @@
 import tkinter as tk
-import pygame 
+import pygame
 import random
 
-from map import Map
 from item import Item
+from map import Map
 
 class Game(tk.Tk):
     def __init__(self):
@@ -15,11 +15,11 @@ class Game(tk.Tk):
         pygame.mixer.init()
         
         # Ensure the path to the Music.mp3 file is correct
-        pygame.mixer.music.load("./code/files/Music.mp3")
+        pygame.mixer.music.load("C:\\Users\\User\\Desktop\\Jackathon\\Music.mp3")
         pygame.mixer.music.play(-1)
 
         self.map = Map([10, 10])
-        self.slender_pos = [1, 1]
+        self.slender_pos = [8, 8]
         self.map.add_to_map("S", self.slender_pos)
 
         self.player_pos = [5, 5]
@@ -50,6 +50,7 @@ class Game(tk.Tk):
         self.controls_label = tk.Label(self, text="Controls: W, A, S, D to move; E to interact; Q to quit", bg="black", fg="white", font=("Arial", 10))
         self.controls_label.pack(side="top")
 
+        
         self.bind("<Key>", self.key_press)
 
         self.update_map()
@@ -58,10 +59,13 @@ class Game(tk.Tk):
         moves = [[-1, 0], [1, 0], [0, -1], [0, 1]]
         move = random.choice(moves)
         new_pos = [self.slender_pos[0] + move[0], self.slender_pos[1] + move[1]]
-        if 0 < new_pos[0] < self.map.dimen[0] - 1 and 0 < new_pos[1] < self.map.dimen[1] - 1:
-            self.map.add_to_map(".", self.slender_pos)
+        if self.map.arr[new_pos[1]][new_pos[0]] in ['D', 'N', '✠','|','-'] :#and new_pos != [0, 5]:
+            pass  # Do not move onto the item
+        else:
+            self.map.add_to_map(".", self.slender_pos)  # Clear current player position
             self.slender_pos = new_pos
-            self.map.add_to_map("S", self.slender_pos)
+            self.map.add_to_map("S", self.slender_pos)  # Add player to new position
+            self.moves += 1
     
     def create_popup(self, item):
         popup = tk.Toplevel(self)
@@ -108,6 +112,8 @@ class Game(tk.Tk):
     def update_inventory_label(self):
         inventory_text = "Inventory: " + ", ".join([item.name for item in self.inventory])
         self.inventory_label.config(text=inventory_text)
+    def display_message(self,mssg):
+        self.message_label.config(text = mssg)
 
     def update_map(self):
         self.map.show_map(self.canvas)
@@ -135,7 +141,7 @@ class Game(tk.Tk):
                 new_pos[0] += 1
 
             # Check if the new position contains an item or other impassable object
-            if self.map.arr[new_pos[1]][new_pos[0]] in ['D', 'N', '✠'] and new_pos != [0, 5]:
+            if self.map.arr[new_pos[1]][new_pos[0]] in ['D', 'N', '✠','|','-'] :#and new_pos != [0, 5]:
                 pass  # Do not move onto the item
             elif new_pos == [0, 5] and self.key not in self.inventory:
                 message = "The door is locked. You need a key to unlock it."
