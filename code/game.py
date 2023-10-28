@@ -4,6 +4,7 @@ import random
 import pickle
 
 import os
+from screeninfo import get_monitors
 
 from item import Item
 from map import Map
@@ -12,7 +13,12 @@ class Game(tk.Tk):
     def __init__(self, map, player_pos, items, inventory, key, door_locations, filename):
         super().__init__()
         self.title("Halloween Escape Room")
-        self.geometry("420x420")
+
+        for m in get_monitors():
+            width = m.width
+            height = m.height
+
+        self.geometry(f"{width}x{height}")
         self.configure(bg="black")
 
         pygame.mixer.init()
@@ -47,7 +53,7 @@ class Game(tk.Tk):
         self.key = key
         self.door_locations = door_locations
 
-        self.canvas = tk.Canvas(self, width=400, height=300, bg="black")
+        self.canvas = tk.Canvas(self, width=1000, height=500, bg="black")
         self.canvas.pack()
 
         self.message_label = tk.Label(self, text="", bg="black", fg="white", font=("Arial", 10))
@@ -144,7 +150,7 @@ class Game(tk.Tk):
             # Check if the new position contains an item or other impassable object
             if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', '|', '-'] + [item.representation for item in self.items] or tuple(new_pos) in self.door_locations:
                 if tuple(new_pos) in self.door_locations:
-                    if self.filename == "room3.py":
+                    if self.filename[0] == "r":
                         if self.check_file("lock.txt") and self.door_locations[tuple(new_pos)][1] == 1:
                             message = "The door is locked. You need to do something to the lock."
                         else:
@@ -153,16 +159,38 @@ class Game(tk.Tk):
                             self.player_pos = new_pos
                             self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
                             self.moves += 1
+                    elif self.filename == "level2.pkl":
+                        if new_pos == [9, 0]:
+                            if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
+                                message = "The door is locked. You need a key to unlock it."
+                            elif self.key in self.inventory:
+                                print("in elif")
+                                self.door_locations[tuple(new_pos)][1] = 0
+                                self.inventory.remove(self.key) # remove key if used on door     
+                                self.update_inventory_label()    
+                                self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                                self.player_pos = new_pos
+                                self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                                self.moves += 1
+                        elif self.door_locations[tuple(new_pos)][1] == 0:
+                            self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                            self.player_pos = new_pos
+                            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                            self.moves += 1
+                        else:
+                            message = "The door is locked. You need a key to unlock it."
+
                     else:
                         if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
                             message = "The door is locked. You need a key to unlock it."
                         elif self.key in self.inventory:
                             self.door_locations[tuple(new_pos)][1] = 0
-                            self.inventory.remove(self.key) # remove key if used on door         
-                        self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                        self.player_pos = new_pos
-                        self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                        self.moves += 1
+                            self.inventory.remove(self.key) # remove key if used on door     
+                            self.update_inventory_label()    
+                            self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                            self.player_pos = new_pos
+                            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                            self.moves += 1
                 else:
                     self.map.add_to_map(".", self.player_pos)  # Clear current player position
                     self.player_pos = new_pos
@@ -216,8 +244,9 @@ def load_state(filename, inv=[]):
 
 if __name__ == "__main__":
     # pickle everything
-    level_names = ['tutorial', 'level1', 'level2']
+    level_names = ['tutorial', 'level1', 'level2', 'room3']
     for level in level_names:
         os.system(f'python3 {level}.py')
 
     load_state(level_names[0] + '.pkl', [])
+    # load_state("level2.pkl")

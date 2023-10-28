@@ -2,7 +2,7 @@ from map import Map
 from item import Item
 from game import Game
 
-player_pos = [5, 5]
+player_pos = [13, 5]
 moves = 0
 
 cd = Item("CD Player", "Your attention is drawn to Return of the King. When did it come out again?", "C", [1,7])
