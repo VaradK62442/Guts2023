@@ -126,6 +126,8 @@ class Game(tk.Tk):
         if not self.winfo_exists():  # Check if the window exists
             return
         
+        self.update_inventory_label()
+        
         message = ""
         if event.keysym in ['w', 'a', 's', 'd']:
             new_pos = self.player_pos.copy()
@@ -145,6 +147,7 @@ class Game(tk.Tk):
                         message = "The door is locked. You need a key to unlock it."
                     else:
                         self.door_locations[tuple(new_pos)][1] = 0
+                        self.items.remove(self.key) # remove key if used on door
                         self.map.add_to_map(".", self.player_pos)  # Clear current player position
                         self.player_pos = new_pos
                         self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
@@ -198,12 +201,18 @@ class Game(tk.Tk):
         pickle.dump(game_info, open('./levels/' + filename, "wb"))
 
 
-def load_state(filename, inv):
+def load_state(filename, inv=[]):
     print(filename)
     me = pickle.load(open("./levels/" + filename, "rb"))
     print(me)
-    me = Game(me[2], me[3], me[4], me[5], me[6], me[7], filename)
+    print("inv: ", inv)
+    me = Game(me[2], me[3], me[4], inv, me[6], me[7], filename)
     me.mainloop()
 
 if __name__ == "__main__":
-    load_state("tutorial.pkl", [])
+    # pickle everything
+    level_names = ['tutorial.py', 'tutorial2.py']
+    for level in level_names:
+        exec(open(level).read())
+
+    load_state(level_names[0].split('.')[0] + '.pkl', [])

@@ -6,8 +6,8 @@ player_pos = [5, 5]
 moves = 0
 
 key = Item("Key", "A mysterious key...", "✠", [3, 4])
-note = Item("Note", "A mysterious note that reads\n 'Welcome adventurer, we shall soon find out if you have the guts to make it through...'", "N", [4, 5])
-items = [key, note]
+# note = Item("Note", "A mysterious note that reads\n 'Welcome adventurer, we shall soon find out if you have the guts to make it through...'", "N", [4, 5])
+items = [key] # note
 inventory = []
 
 # 0 is open, 1 is closed (initially)
