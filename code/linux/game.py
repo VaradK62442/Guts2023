@@ -182,7 +182,6 @@ class Game(tk.Tk):
     def check_key(self, new_pos):
         message = None
         if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
-
             message = "The door is locked. You need a key to unlock it."
         elif self.door_locations[tuple(new_pos)][1] == 0:
             # Clear current player position
@@ -243,18 +242,17 @@ class Game(tk.Tk):
                     # Here i kept the condition cheking, but the code inside each codition check is the same,
                     # also, now i got it so you can go back to every room, including the 2nd tv one
                     if self.filename[0] == "r":
-                        message = self.check_key(new_pos)
-                        if message != None:  # just for the special message of this room
+                        # message = self.check_key(new_pos)
+                        # if message != None:  # just for the special message of this room
+                        #     message = "The door is locked. You need to do something to the lock."
+                        if self.check_file("lock.txt") and self.door_locations[tuple(new_pos)][1] == 1:
                             message = "The door is locked. You need to do something to the lock."
-            #            print("entered")
-             #           if self.check_file("lock.txt") and self.door_locations[tuple(new_pos)][1] == 1:
-              #              message = "The door is locked. You need to do something to the lock."
-               #         else:
-                #            self.door_locations[tuple(new_pos)][1] = 0
-                 #           self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                  #          self.player_pos = new_pos
-                   #         self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                    #        self.moves += 1
+                        else:
+                            self.door_locations[tuple(new_pos)][1] = 0
+                            self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                            self.player_pos = new_pos
+                            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                            self.moves += 1
                     elif self.filename == "level2.pkl":
                         if new_pos == [9, 0] and self.firstTimeL2 == True:
                             # if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
@@ -270,15 +268,15 @@ class Game(tk.Tk):
                             message = self.check_key(new_pos)
                         elif new_pos == [6, 4] and self.firstTimeL2 == False:
                             #            if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
-                         #               message = "The door is locked. You need a key to unlock it."
-                          #          elif self.key in self.inventory:
-                           #             self.door_locations[tuple(new_pos)][1] = 0
+                            #            message = "The door is locked. You need a key to unlock it."
+                            #        elif self.key in self.inventory:
+                            #            self.door_locations[tuple(new_pos)][1] = 0
                             #            self.inventory.remove(self.key) # remove key if used on door
-                         #           self.update_inventory_label()
-                          #          self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                           #         self.player_pos = new_pos
+                            #        self.update_inventory_label()
+                            #        self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                            #        self.player_pos = new_pos
                             #        self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                         #       self.moves += 1
+                            #    self.moves += 1
                             message = self.check_key(new_pos)
                         elif self.door_locations[tuple(new_pos)][1] == 0:
                             # Clear current player position

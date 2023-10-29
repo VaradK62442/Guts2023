@@ -28,7 +28,8 @@ class Map:
             self.add_to_map(
                 "D", door) if door_locations[door][1] else self.add_to_map(".", door)
 
-    def show_map(self, canvas):
+    def show_map2(self, canvas):
+        print("show map called")
         canvas.delete("all")
         canvas.update()  # Force the canvas to update its size
         canvas_width = canvas.winfo_width()
@@ -41,6 +42,12 @@ class Map:
             for x in range(self.dimen[0]):
                 canvas.create_text(
                     offset_x + x * 20 + 10, offset_y + y * 20 + 10, text=self.arr[y][x], fill="white", font=('Arial', 20))
+                
+    def show_map(self, canvas):
+        canvas.delete("all")
+        for y in range(self.dimen[1]):
+            for x in range(self.dimen[0]):
+                canvas.create_text(x * 20 + 10, y * 20 + 10, text=self.arr[y][x], fill="white", font=('Arial', 20))
 
 
     def add_to_map(self, object, position):
