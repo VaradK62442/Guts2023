@@ -12,12 +12,14 @@ items = [key, note]
 inventory = []
 
 # 0 is open, 1 is closed (initially)
-door_locations = {(0, 2): ['level1.pkl', 0], (3, 0): ['', 1], (6, 4): ['room3.pkl', 1], (9, 0): ['level3.pkl', 1], (12, 4): ['', 1], (15, 0): ['', 1]}
+door_locations = {(0, 2): ['level1.pkl', 0], (3, 0): ['', 1], (6, 4): [
+    'room3.pkl', 1], (9, 0): ['level3.pkl', 1], (12, 4): ['', 1], (15, 0): ['', 1]}
 
 xDim = 25
 yDim = 5
 map = Map([xDim, yDim], door_locations)
 
-lvl = Game(map, player_pos, items, inventory, key, door_locations, "level2.pkl")
+lvl = Game(map, player_pos, items, inventory,
+           key, door_locations, "level2.pkl")
 
 lvl.save_state("level2.pkl")

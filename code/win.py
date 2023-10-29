@@ -5,7 +5,8 @@ from game import Game
 player_pos = [9, 1]
 moves = 0
 
-note = Item("Note", "Well well well...\nIt appears you did have the guts...\nCongratulations for completing the escape room. You have proven your skill.", "N", [4, 5])
+note = Item(
+    "Note", "Well well well...\nIt appears you did have the guts...\nCongratulations for completing the escape room. You have proven your skill.", "N", [4, 5])
 items = [note]
 inventory = []
 
@@ -16,6 +17,7 @@ xDim = 30
 yDim = 30
 map = Map([xDim, yDim], door_locations)
 
-tutorial = Game(map, player_pos, items, inventory, None, door_locations, "win.pkl")
+tutorial = Game(map, player_pos, items, inventory,
+                None, door_locations, "win.pkl")
 
 tutorial.save_state("win.pkl")

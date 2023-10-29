@@ -5,7 +5,8 @@ from game import Game
 player_pos = [5, 19]
 moves = 0
 
-tv = Item("TV Remote", "You pick up the TV remote. The TV flickers on and asks\n 'Where did the eagles not dare in 2003?'", "T", [5, 5])
+tv = Item("TV Remote",
+          "You pick up the TV remote. The TV flickers on and asks\n 'Where did the eagles not dare in 2003?'", "T", [5, 5])
 
 items = [tv]
 inventory = []
@@ -17,6 +18,7 @@ xDim = 10
 yDim = 20
 map = Map([xDim, yDim], door_locations)
 
-lvl = Game(map, player_pos, items, inventory, None, door_locations, "level3.pkl")
+lvl = Game(map, player_pos, items, inventory,
+           None, door_locations, "level3.pkl")
 
 lvl.save_state("level3.pkl")
