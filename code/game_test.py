@@ -83,37 +83,67 @@ class Game(tk.Tk):
         popup = tk.Toplevel(self)
         popup.title("Inventory")
 
-        listbox = tk.Listbox(popup, font=("Chiller", 20), bg="black", fg="white", selectbackground="gray", selectmode=tk.SINGLE)
+        listbox = tk.Listbox(popup, font=("Chiller", 20), bg="black",
+                            fg="white", selectbackground="gray", selectmode=tk.SINGLE)
         for item in self.inventory:
             listbox.insert(tk.END, item.name)
         listbox.pack(pady=5, padx=5, fill=tk.BOTH, expand=True)
 
-        description_label = tk.Label(popup, text="", wraplength=300, font=("Chiller", 15), bg="black", fg="white")
+        description_label = tk.Label(popup, text="", wraplength=300, font=(
+            "Chiller", 15), bg="black", fg="white")
         description_label.pack(pady=5, padx=5, fill=tk.BOTH, expand=True)
 
-        tk.Button(popup, text="Close", font=("Chiller", 15), command=popup.destroy).pack(pady=5, padx=5)
+        input_frame = tk.Frame(popup, bg="black")
+        input_frame.pack(pady=5, padx=5, fill=tk.BOTH, expand=True)
+
+        entry = tk.Entry(input_frame, font=("Chiller", 15), bg="black", fg="white")
+        entry.pack(side=tk.LEFT, pady=5, padx=5, fill=tk.BOTH, expand=True)
+
+        enter_button = tk.Button(input_frame, text="Enter", font=("Chiller", 15),
+                                command=lambda: self.tvRemoteAnswer(entry.get()))
+        enter_button.pack(side=tk.RIGHT, pady=5, padx=5)
+
+        tk.Button(popup, text="Close", font=("Chiller", 15),
+                command=popup.destroy).pack(pady=5, padx=5)
 
         def update_description(event):
             selected_index = listbox.curselection()
             if selected_index:
                 selected_item = self.inventory[selected_index[0]]
                 description_label.config(text=selected_item.description)
+                if selected_item.name == "TV Remote":
+                    input_frame.pack(pady=5, padx=5, fill=tk.BOTH, expand=True)
+                else:
+                    input_frame.pack_forget()
             else:
                 description_label.config(text="")
 
         listbox.bind("<<ListboxSelect>>", update_description)
 
 
-    def tvRemoteAnswer(self):
-        print(self.entry.get())
+    def tvRemoteAnswer(self, answer):
+        print(answer)
         if self.inLevel3:
-            if self.entry.get().lower() == "mordor":
+            if answer.lower() == "mordor":
                 self.tvAnswerCorrect = True
+                self.show_message_popup("Correct Answer!")
                 self.popup.destroy()
         elif self.inLevel1:
-            if self.entry.get() == "1667":
+            if answer == "1667":
                 self.tvAnswerCorrect = True
+                self.show_message_popup("Correct Answer!")
                 self.popup.destroy()
+
+    def show_message_popup(self, message):
+        message_popup = tk.Toplevel(self)
+        message_popup.title("Message")
+
+        label = tk.Label(message_popup, text=message, font=("Chiller", 20))
+        label.pack(pady=20, padx=20)
+
+        tk.Button(message_popup, text="Ok", command=message_popup.destroy).pack(pady=20)
+
+
 
     def check_file(self, file_name):
         files = os.listdir(
