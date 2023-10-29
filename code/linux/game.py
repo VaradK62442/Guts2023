@@ -228,7 +228,7 @@ class Game(tk.Tk):
                 print(f"first time val: {self.firstTimeL2}")
 
             if self.tvAnswerCorrect:
-                key = Item("Key", "A mysterious key...", "✠", [7, 7])
+                key = Item("Key", "A mysterious key that opens the first door on the bottom...", "✠", [7, 7])
                 self.inventory.append(key)
                 self.key = key
                 self.tvAnswerCorrect = False
