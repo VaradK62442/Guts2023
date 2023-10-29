@@ -28,7 +28,7 @@ class Game(tk.Tk):
         self.tvAnswerCorrect = False
         
         # Ensure the path to the Music.mp3 file is correct
-        pygame.mixer.music.load("./files/Music.mp3")
+        pygame.mixer.music.load("C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/files/Music.mp3")
         pygame.mixer.music.play(-1)
 
         self.map = map
@@ -102,7 +102,7 @@ class Game(tk.Tk):
                 self.popup.destroy()
 
     def check_file(self, file_name):
-        files = os.listdir("./files/")
+        files = os.listdir("C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/files/")
         if file_name in files:
             return True
         else:
@@ -161,6 +161,25 @@ class Game(tk.Tk):
         popup.title("Congratulations!")
         label = tk.Label(popup, text="Your soul is safe for another day", font=("Chiller", 20))
         label.pack(pady=20, padx=20)
+    def check_key(self,new_pos):
+        message = None
+        if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
+
+            message = "The door is locked. You need a key to unlock it."
+        elif self.door_locations[tuple(new_pos)][1] == 0:
+            self.map.add_to_map(".", self.player_pos)  # Clear current player position
+            self.player_pos = new_pos
+            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+            self.moves += 1
+        elif self.key in self.inventory:
+            self.door_locations[tuple(new_pos)][1] = 0
+            self.inventory.remove(self.key) # remove key if used on door     
+            self.update_inventory_label()
+            self.map.add_to_map(".", self.player_pos)  # Clear current player position
+            self.player_pos = new_pos
+            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+            self.moves += 1
+        return message
 
     def key_press(self, event):
         if not self.winfo_exists():  # Check if the window exists
@@ -198,38 +217,47 @@ class Game(tk.Tk):
             # Check if the new position contains an item or other impassable object
             if self.map.arr[new_pos[1]][new_pos[0]] not in ['D', '|', '-'] + [item.representation for item in self.items] or tuple(new_pos) in self.door_locations:
                 if tuple(new_pos) in self.door_locations:
+                    #!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    #Here i kept the condition cheking, but the code inside each codition check is the same, 
+                    #also, now i got it so you can go back to every room, including the 2nd tv one
                     if self.filename[0] == "r":
-                        if self.check_file("lock.txt") and self.door_locations[tuple(new_pos)][1] == 1:
+                        message = self.check_key(new_pos)
+                        if message != None:#just for the special message of this room
                             message = "The door is locked. You need to do something to the lock."
-                        else:
-                            self.door_locations[tuple(new_pos)][1] = 0
-                            self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                            self.player_pos = new_pos
-                            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                            self.moves += 1
+            #            print("entered")
+             #           if self.check_file("lock.txt") and self.door_locations[tuple(new_pos)][1] == 1:
+              #              message = "The door is locked. You need to do something to the lock."
+               #         else:
+                #            self.door_locations[tuple(new_pos)][1] = 0
+                 #           self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                  #          self.player_pos = new_pos
+                   #         self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                    #        self.moves += 1
                     elif self.filename == "level2.pkl":
                         if new_pos == [9, 0] and self.firstTimeL2 == True: 
-                            if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
-                                message = "The door is locked. You need a key to unlock it."
-                            elif self.key in self.inventory:
-                                self.door_locations[tuple(new_pos)][1] = 0
-                                self.inventory.remove(self.key) # remove key if used on door     
-                                self.update_inventory_label()
-                                self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                                self.player_pos = new_pos
-                                self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                                self.moves += 1
+                            #if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
+                             #   message = "The door is locked. You need a key to unlock it."
+                            #elif self.key in self.inventory:
+                             #   self.door_locations[tuple(new_pos)][1] = 0
+                              #  self.inventory.remove(self.key) # remove key if used on door     
+                               # self.update_inventory_label()
+                                #self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                            #    self.player_pos = new_pos
+                             #   self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                              #  self.moves += 1
+                            message = self.check_key(new_pos)
                         elif new_pos == [6, 4] and self.firstTimeL2 == False:
-                            if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
-                                message = "The door is locked. You need a key to unlock it."
-                            elif self.key in self.inventory:
-                                self.door_locations[tuple(new_pos)][1] = 0
-                                self.inventory.remove(self.key) # remove key if used on door     
-                                self.update_inventory_label()  
-                                self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                                self.player_pos = new_pos
-                                self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                                self.moves += 1
+                #            if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
+                 #               message = "The door is locked. You need a key to unlock it."
+                  #          elif self.key in self.inventory:
+                   #             self.door_locations[tuple(new_pos)][1] = 0
+                    #            self.inventory.remove(self.key) # remove key if used on door     
+                     #           self.update_inventory_label()  
+                      #          self.map.add_to_map(".", self.player_pos)  # Clear current player position
+                       #         self.player_pos = new_pos
+                        #        self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
+                         #       self.moves += 1
+                            message = self.check_key(new_pos)
                         elif self.door_locations[tuple(new_pos)][1] == 0:
                             self.map.add_to_map(".", self.player_pos)  # Clear current player position
                             self.player_pos = new_pos
@@ -239,24 +267,7 @@ class Game(tk.Tk):
                             message = "The door is locked. You need a key to unlock it."
 
                     else:
-                        if self.key not in self.inventory and self.door_locations[tuple(new_pos)][1] == 1:
-                            message = "The door is locked. You need a key to unlock it."
-                        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        # added this, might need to remove since it might fuck shit up
-                        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        elif self.door_locations[tuple(new_pos)][1] == 0:
-                            self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                            self.player_pos = new_pos
-                            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                            self.moves += 1
-                        elif self.key in self.inventory:
-                            self.door_locations[tuple(new_pos)][1] = 0
-                            self.inventory.remove(self.key) # remove key if used on door     
-                            self.update_inventory_label()    
-                            self.map.add_to_map(".", self.player_pos)  # Clear current player position
-                            self.player_pos = new_pos
-                            self.map.add_to_map("⯌", self.player_pos)  # Add player to new position
-                            self.moves += 1
+                        message = self.check_key(new_pos)
                 else:
                     self.map.add_to_map(".", self.player_pos)  # Clear current player position
                     self.player_pos = new_pos
@@ -295,17 +306,17 @@ class Game(tk.Tk):
 
         self.position_label.config(text=f"Player Position: {self.player_pos}")
 
-        if message:
+        if message != None:
             self.display_message(message)
 
     def save_state(game, filename):
         game_info = ["title", "geom", game.map, game.player_pos, game.items, game.inventory, game.key, game.door_locations]
-        pickle.dump(game_info, open('./levels/' + filename, "wb"))
+        pickle.dump(game_info, open('C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/levels/' + filename, "wb"))
 
 
 def load_state(filename, inv=[]):
     print("Trying to load ", filename)
-    me = pickle.load(open("./levels/" + filename, "rb"))
+    me = pickle.load(open("C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/levels/" + filename, "rb"))
     me = Game(me[2], me[3], me[4], inv, me[6], me[7], filename)
     me.mainloop()
 
@@ -313,7 +324,7 @@ if __name__ == "__main__":
     # pickle everything
     level_names = ['tutorial', 'level1', 'level2', 'level3', 'room3', 'win']
     for level in level_names:
-        os.system(f'python3 {level}.py')
+        os.system(f'python3 C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/{level}.py')
 
     load_state(level_names[0] + '.pkl', [])
     # load_state("level2.pkl")
