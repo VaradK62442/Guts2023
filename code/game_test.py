@@ -83,12 +83,26 @@ class Game(tk.Tk):
         popup = tk.Toplevel(self)
         popup.title("Inventory")
 
+        listbox = tk.Listbox(popup, font=("Chiller", 20), bg="black", fg="white", selectbackground="gray", selectmode=tk.SINGLE)
         for item in self.inventory:
-            label = tk.Label(
-                popup, text=f"{item.name}: {item.description}", wraplength=300, font=("Arial", 10))
-            label.pack(pady=5, padx=5)
+            listbox.insert(tk.END, item.name)
+        listbox.pack(pady=5, padx=5, fill=tk.BOTH, expand=True)
 
-        tk.Button(popup, text="Close", command=popup.destroy).pack(pady=5)
+        description_label = tk.Label(popup, text="", wraplength=300, font=("Chiller", 15), bg="black", fg="white")
+        description_label.pack(pady=5, padx=5, fill=tk.BOTH, expand=True)
+
+        tk.Button(popup, text="Close", font=("Chiller", 15), command=popup.destroy).pack(pady=5, padx=5)
+
+        def update_description(event):
+            selected_index = listbox.curselection()
+            if selected_index:
+                selected_item = self.inventory[selected_index[0]]
+                description_label.config(text=selected_item.description)
+            else:
+                description_label.config(text="")
+
+        listbox.bind("<<ListboxSelect>>", update_description)
+
 
     def tvRemoteAnswer(self):
         print(self.entry.get())
