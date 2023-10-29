@@ -28,7 +28,7 @@ class Game(tk.Tk):
         self.tvAnswerCorrect = False
         
         # Ensure the path to the Music.mp3 file is correct
-        pygame.mixer.music.load("C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/files/Music.mp3")
+        pygame.mixer.music.load("./files/Music.mp3")
         pygame.mixer.music.play(-1)
 
         self.map = map
@@ -311,12 +311,12 @@ class Game(tk.Tk):
 
     def save_state(game, filename):
         game_info = ["title", "geom", game.map, game.player_pos, game.items, game.inventory, game.key, game.door_locations]
-        pickle.dump(game_info, open('C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/levels/' + filename, "wb"))
+        pickle.dump(game_info, open('./levels/' + filename, "wb"))
 
 
 def load_state(filename, inv=[]):
     print("Trying to load ", filename)
-    me = pickle.load(open("C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/levels/" + filename, "rb"))
+    me = pickle.load(open("./levels/" + filename, "rb"))
     me = Game(me[2], me[3], me[4], inv, me[6], me[7], filename)
     me.mainloop()
 
@@ -324,7 +324,7 @@ if __name__ == "__main__":
     # pickle everything
     level_names = ['tutorial', 'level1', 'level2', 'level3', 'room3', 'win']
     for level in level_names:
-        os.system(f'python3 C:/Users/samue/OneDrive/Desktop/Hackathon/newfold/Guts2023/code/{level}.py')
+        os.system(f'python3 {level}.py')
 
     load_state(level_names[0] + '.pkl', [])
     # load_state("level2.pkl")
