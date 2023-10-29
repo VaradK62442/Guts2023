@@ -76,7 +76,7 @@ class Game(tk.Tk):
         self.inventory_label.pack(side="right")
 
         self.controls_label = tk.Label(
-            self, text="Controls: W, A, S, D to move; E to interact; Q to quit", bg="black", fg="white", font=("Arial", 10))
+            self, text="Controls: W, A, S, D to move; E to interact; I to open inventory; Q to quit", bg="black", fg="white", font=("Arial", 10))
         self.controls_label.pack(side="top")
 
         self.bind("<Key>", self.key_press)
@@ -160,6 +160,8 @@ class Game(tk.Tk):
             label = tk.Label(popup, text=item.description,
                              wraplength=300, font=("Chiller", 20))
             label.pack(pady=20, padx=20)
+
+            tk.Button(popup, text="Close", command=popup.destroy).pack(pady=5)
 
     def update_inventory_label(self):
         inventory_text = "Inventory: " + \
